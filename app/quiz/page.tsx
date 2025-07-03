@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 
 export default function QuizPage() {
-  const [currentStep, setCurrentStep] = useState(2)
+  const [currentStep, setCurrentStep] = useState(1)
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null)
   const [quizAnswers, setQuizAnswers] = useState<Record<string, any>>({})
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]) // Moved useState here
@@ -25,8 +25,16 @@ export default function QuizPage() {
   // Add new state for birth location after the existing state declarations
   const [birthLocation, setBirthLocation] = useState<string>("")
   const [progress, setProgress] = useState(0)
+  const [selectedGender, setSelectedGender] = useState<string>("")
+  const [selectedPartnerGender, setSelectedPartnerGender] = useState<string>("")
+  const [partnerBirthMonth, setPartnerBirthMonth] = useState<string>("")
+  const [partnerBirthDay, setPartnerBirthDay] = useState<string>("")
+  const [partnerBirthYear, setPartnerBirthYear] = useState<string>("")
+  const [partnerBirthHour, setPartnerBirthHour] = useState<string>("")
+  const [partnerBirthMinute, setPartnerBirthMinute] = useState<string>("")
+  const [partnerBirthPeriod, setPartnerBirthPeriod] = useState<string>("")
 
-  const totalSteps = 28
+  const totalSteps = 29
   const router = useRouter()
 
   useEffect(() => {
@@ -59,7 +67,7 @@ export default function QuizPage() {
   }
 
   const handleBack = () => {
-    if (currentStep === 2) {
+    if (currentStep === 1) {
       router.push("/")
     } else {
       setCurrentStep(currentStep - 1)
@@ -270,6 +278,19 @@ export default function QuizPage() {
     },
   ]
 
+  const genderOptions = [
+    {
+      id: "male",
+      label: "Male",
+      icon: "👨",
+    },
+    {
+      id: "female",
+      label: "Female",
+      icon: "👩",
+    },
+  ]
+
   const months = [
     "January",
     "February",
@@ -292,6 +313,93 @@ export default function QuizPage() {
   const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString())
   const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"))
   const periods = ["AM", "PM"]
+
+  // Function to determine zodiac sign based on birth date
+  const getZodiacSign = (month: string, day: string) => {
+    const monthNum = months.indexOf(month) + 1
+    const dayNum = Number.parseInt(day)
+
+    if ((monthNum === 3 && dayNum >= 21) || (monthNum === 4 && dayNum <= 19)) return "aries"
+    if ((monthNum === 4 && dayNum >= 20) || (monthNum === 5 && dayNum <= 20)) return "taurus"
+    if ((monthNum === 5 && dayNum >= 21) || (monthNum === 6 && dayNum <= 20)) return "gemini"
+    if ((monthNum === 6 && dayNum >= 21) || (monthNum === 7 && dayNum <= 22)) return "cancer"
+    if ((monthNum === 7 && dayNum >= 23) || (monthNum === 8 && dayNum <= 22)) return "leo"
+    if ((monthNum === 8 && dayNum >= 23) || (monthNum === 9 && dayNum <= 22)) return "virgo"
+    if ((monthNum === 9 && dayNum >= 23) || (monthNum === 10 && dayNum <= 22)) return "libra"
+    if ((monthNum === 10 && dayNum >= 23) || (monthNum === 11 && dayNum <= 21)) return "scorpio"
+    if ((monthNum === 11 && dayNum >= 22) || (monthNum === 12 && dayNum <= 21)) return "sagittarius"
+    if ((monthNum === 12 && dayNum >= 22) || (monthNum === 1 && dayNum <= 19)) return "capricorn"
+    if ((monthNum === 1 && dayNum >= 20) || (monthNum === 2 && dayNum <= 18)) return "aquarius"
+    if ((monthNum === 2 && dayNum >= 19) || (monthNum === 3 && dayNum <= 20)) return "pisces"
+
+    return "sagittarius" // fallback
+  }
+
+  // Zodiac sign data
+  const zodiacSigns = {
+    aries: {
+      name: "Aries",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Aries, you are bold and ambitious, with a natural leadership quality and pioneering spirit.`,
+      svg: <Image src="/aries.svg" alt="Aries constellation" width={364} height={179} className="mx-auto" />,
+    },
+    taurus: {
+      name: "Taurus",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Taurus, you are reliable and practical, with a love for comfort and a strong determination.`,
+      svg: <Image src="/taurus.svg" alt="Taurus constellation" width={364} height={179} className="mx-auto" />,
+    },
+    gemini: {
+      name: "Gemini",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Gemini, you are curious and adaptable, with excellent communication skills and a dual nature.`,
+      svg: <Image src="/gemini.svg" alt="Gemini constellation" width={364} height={179} className="mx-auto" />,
+    },
+    cancer: {
+      name: "Cancer",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Cancer, you are nurturing and intuitive, with strong emotional intelligence and protective instincts.`,
+      svg: <Image src="/cancer.svg" alt="Cancer constellation" width={364} height={179} className="mx-auto" />,
+    },
+    leo: {
+      name: "Leo",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Leo, you are confident and charismatic, with natural leadership abilities and a generous heart.`,
+      svg: <Image src="/leo.svg" alt="Leo constellation" width={364} height={179} className="mx-auto" />,
+    },
+    virgo: {
+      name: "Virgo",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Virgo, you are analytical and practical, with attention to detail and a desire for perfection.`,
+      svg: <Image src="/virgo.svg" alt="Virgo constellation" width={364} height={179} className="mx-auto" />,
+    },
+    libra: {
+      name: "Libra",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Libra, you are diplomatic and fair-minded, with a natural sense of balance and harmony.`,
+      svg: <Image src="/libra.svg" alt="Libra constellation" width={364} height={179} className="mx-auto" />,
+    },
+    scorpio: {
+      name: "Scorpio",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Scorpio, you are intense and passionate, with deep emotional insight and transformative power.`,
+      svg: <Image src="/scorpio.svg" alt="Scorpio constellation" width={364} height={179} className="mx-auto" />,
+    },
+    sagittarius: {
+      name: "Sagittarius",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Sagittarius, you are adventurous and optimistic, with a love for exploration and a natural curiosity about the world.`,
+      svg: (
+        <Image src="/sagittarius.svg" alt="Sagittarius constellation" width={364} height={179} className="mx-auto" />
+      ),
+    },
+    capricorn: {
+      name: "Capricorn",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Capricorn, you are ambitious and disciplined, with strong determination and practical wisdom.`,
+      svg: <Image src="/capricorn.svg" alt="Capricorn constellation" width={364} height={179} className="mx-auto" />,
+    },
+    aquarius: {
+      name: "Aquarius",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Aquarius, you are independent and innovative, with humanitarian ideals and original thinking.`,
+      svg: <Image src="/aquarius.svg" alt="Aquarius constellation" width={364} height={179} className="mx-auto" />,
+    },
+    pisces: {
+      name: "Pisces",
+      description: `As a${selectedGender ? ` ${selectedGender}` : ""} Pisces, you are compassionate and intuitive, with deep empathy and artistic sensibilities.`,
+      svg: <Image src="/pisces.svg" alt="Pisces constellation" width={364} height={179} className="mx-auto" />,
+    },
+  }
 
   const handleBirthDateContinue = () => {
     if (birthMonth && birthDay && birthYear) {
@@ -330,6 +438,126 @@ export default function QuizPage() {
       }))
       setCurrentStep(13)
     }
+  }
+
+  const handleGenderSelect = (gender: string) => {
+    setSelectedGender(gender)
+    setQuizAnswers((prev) => ({ ...prev, gender: gender }))
+    setTimeout(() => {
+      setCurrentStep(2)
+    }, 300)
+  }
+
+  const handlePartnerGenderSelect = (gender: string) => {
+    setSelectedPartnerGender(gender)
+    setQuizAnswers((prev) => ({ ...prev, partnerGender: gender }))
+    setTimeout(() => {
+      setCurrentStep(16)
+    }, 300)
+  }
+
+  const handlePartnerBirthDateContinue = () => {
+    if (partnerBirthMonth && partnerBirthDay && partnerBirthYear) {
+      setQuizAnswers((prev) => ({
+        ...prev,
+        partnerBirthDate: { month: partnerBirthMonth, day: partnerBirthDay, year: partnerBirthYear },
+      }))
+      setCurrentStep(17)
+    }
+  }
+
+  const handlePartnerBirthTimeContinue = () => {
+    if (partnerBirthHour && partnerBirthMinute && partnerBirthPeriod) {
+      setQuizAnswers((prev) => ({
+        ...prev,
+        partnerBirthTime: { hour: partnerBirthHour, minute: partnerBirthMinute, period: partnerBirthPeriod },
+      }))
+      setCurrentStep(18)
+    }
+  }
+
+  const handlePartnerDontKnowTime = () => {
+    setQuizAnswers((prev) => ({
+      ...prev,
+      partnerBirthTime: "unknown",
+    }))
+    setCurrentStep(18)
+  }
+
+  // Step 1: Gender Selection
+  if (currentStep === 1) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-10">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              {/* Back button */}
+              <Button variant="ghost" size="sm" onClick={handleBack} className="p-2 hover:bg-gray-100 rounded-full">
+                <ArrowLeft className="h-5 w-5 text-gray-600" />
+              </Button>
+
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                <span className="text-xl font-semibold text-gray-800">MOONGRADE</span>
+              </div>
+
+              {/* Progress indicator */}
+              <div className="text-sm text-gray-600 font-medium">
+                {currentStep}/{totalSteps}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="h-2" />
+            </div>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <main className="container mx-auto px-4 py-12">
+          <div className="max-w-2xl mx-auto">
+            {/* Question */}
+            <div className="text-center mb-12">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What is your gender?</h1>
+            </div>
+
+            {/* Answer options */}
+            <div className="space-y-4">
+              {genderOptions.map((gender) => (
+                <Card
+                  key={gender.id}
+                  className={`p-6 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] border-2 ${
+                    selectedGender === gender.id
+                      ? "border-purple-400 bg-purple-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                  onClick={() => handleGenderSelect(gender.id)}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="text-2xl">{gender.icon}</div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900">{gender.label}</h3>
+                    </div>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                        selectedGender === gender.id ? "border-purple-400 bg-purple-400" : "border-gray-300"
+                      }`}
+                    >
+                      {selectedGender === gender.id && (
+                        <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   // Step 2: Astrology Level Selection
@@ -838,8 +1066,6 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 8 condition right after Step 7 and before the fallback return statement:
-
   // Step 8: Love Life Emotions (Single Selection)
   if (currentStep === 8) {
     const handleEmotionSelect = (emotion: string) => {
@@ -927,8 +1153,6 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 9 condition right after Step 8 and before the fallback return statement:
-
   // Step 9: Relationship Compatibility Information
   if (currentStep === 9) {
     return (
@@ -1012,7 +1236,6 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 10 condition right after Step 9 and before the fallback return statement:
   // Step 10: Birth Date Collection
   if (currentStep === 10) {
     return (
@@ -1134,7 +1357,6 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 11 condition right after Step 10 and before the fallback return statement:
   // Step 11: Birth Time Collection
   if (currentStep === 11) {
     return (
@@ -1266,7 +1488,6 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 12 condition right after Step 11 and before the fallback return statement:
   // Step 12: Birth Location Collection
   if (currentStep === 12) {
     return (
@@ -1348,7 +1569,6 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 13 condition right after Step 12 and before the fallback return statement:
   // Step 13: Birth Chart Analysis Loading
   if (currentStep === 13) {
     return (
@@ -1356,12 +1576,32 @@ export default function QuizPage() {
         {/* Header */}
         <header className="sticky top-0 bg-slate-800/80 backdrop-blur-sm border-b border-slate-600 z-10 relative">
           <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-between">
+              {/* Back button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="p-2 hover:bg-slate-700 rounded-full text-white"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+
               {/* Logo */}
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
                 <span className="text-xl font-semibold text-white">MOONGRADE</span>
               </div>
+
+              {/* Progress indicator */}
+              <div className="text-sm text-gray-300 font-medium">
+                {currentStep}/{totalSteps}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="h-2 bg-slate-600" />
             </div>
           </div>
         </header>
@@ -1429,10 +1669,11 @@ export default function QuizPage() {
     )
   }
 
-  // Add Step 14 condition right after Step 13 and before the fallback return statement:
-
   // Step 14: Zodiac Sign Reveal
   if (currentStep === 14) {
+    const currentZodiacSign = getZodiacSign(birthMonth, birthDay)
+    const zodiacData = zodiacSigns[currentZodiacSign as keyof typeof zodiacSigns]
+
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-slate-900 relative overflow-hidden">
         {/* Header */}
@@ -1460,6 +1701,11 @@ export default function QuizPage() {
                 {currentStep}/{totalSteps}
               </div>
             </div>
+
+            {/* Progress bar */}
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="h-2 bg-slate-600" />
+            </div>
           </div>
         </header>
 
@@ -1468,58 +1714,14 @@ export default function QuizPage() {
           <div className="max-w-md mx-auto text-center">
             {/* Zodiac Card */}
             <div className="bg-slate-700/50 backdrop-blur-sm rounded-3xl p-12 mb-8 border border-slate-600/50">
-              {/* Sagittarius Constellation */}
-              <div className="mb-8">
-                <svg
-                  width="200"
-                  height="200"
-                  viewBox="0 0 200 200"
-                  className="mx-auto text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  {/* Sagittarius constellation - simplified archer figure */}
-                  {/* Body */}
-                  <circle cx="100" cy="120" r="3" fill="currentColor" />
-                  <circle cx="85" cy="110" r="2" fill="currentColor" />
-                  <circle cx="115" cy="125" r="2" fill="currentColor" />
-                  <circle cx="95" cy="140" r="2" fill="currentColor" />
-                  <circle cx="105" cy="145" r="2" fill="currentColor" />
-
-                  {/* Bow and arrow */}
-                  <circle cx="60" cy="80" r="2" fill="currentColor" />
-                  <circle cx="140" cy="60" r="2" fill="currentColor" />
-                  <circle cx="160" cy="50" r="2" fill="currentColor" />
-
-                  {/* Connecting lines */}
-                  <line x1="100" y1="120" x2="85" y2="110" />
-                  <line x1="85" y1="110" x2="60" y2="80" />
-                  <line x1="100" y1="120" x2="115" y2="125" />
-                  <line x1="115" y1="125" x2="140" y2="60" />
-                  <line x1="140" y1="60" x2="160" y2="50" />
-                  <line x1="100" y1="120" x2="95" y2="140" />
-                  <line x1="100" y1="120" x2="105" y2="145" />
-
-                  {/* Bow curve */}
-                  <path d="M 50 85 Q 55 75 60 80" fill="none" />
-                  <path d="M 50 85 Q 55 95 60 80" fill="none" />
-
-                  {/* Arrow */}
-                  <line x1="65" y1="75" x2="155" y2="45" />
-                  <line x1="150" y1="42" x2="155" y2="45" />
-                  <line x1="155" y1="45" x2="152" y2="50" />
-                </svg>
-              </div>
+              {/* Dynamic Zodiac Constellation */}
+              <div className="mb-8">{zodiacData.svg}</div>
 
               {/* Sign Name */}
-              <h2 className="text-3xl font-bold text-white mb-6">Sagittarius</h2>
+              <h2 className="text-3xl font-bold text-white mb-6">{zodiacData.name}</h2>
 
               {/* Description */}
-              <p className="text-gray-300 leading-relaxed text-lg">
-                As a male Sagittarius, you are adventurous and optimistic, with a love for exploration and a natural
-                curiosity about the world.
-              </p>
+              <p className="text-gray-300 leading-relaxed text-lg">{zodiacData.description}</p>
             </div>
 
             {/* Continue button */}
@@ -1529,6 +1731,338 @@ export default function QuizPage() {
               className="w-full max-w-sm px-12 py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-lg rounded-full transition-all duration-200 hover:scale-105"
             >
               Continue
+            </Button>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Step 15: Partner Gender Selection
+  if (currentStep === 15) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-10">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              {/* Back button */}
+              <Button variant="ghost" size="sm" onClick={handleBack} className="p-2 hover:bg-gray-100 rounded-full">
+                <ArrowLeft className="h-5 w-5 text-gray-600" />
+              </Button>
+
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                <span className="text-xl font-semibold text-gray-800">MOONGRADE</span>
+              </div>
+
+              {/* Progress indicator */}
+              <div className="text-sm text-gray-600 font-medium">
+                {currentStep}/{totalSteps}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="h-2" />
+            </div>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <main className="container mx-auto px-4 py-12">
+          <div className="max-w-2xl mx-auto">
+            {/* Question */}
+            <div className="text-center mb-12">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What is your partner's gender?</h1>
+            </div>
+
+            {/* Answer options */}
+            <div className="space-y-4">
+              {genderOptions.map((gender) => (
+                <Card
+                  key={gender.id}
+                  className={`p-6 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] border-2 ${
+                    selectedPartnerGender === gender.id
+                      ? "border-purple-400 bg-purple-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                  onClick={() => handlePartnerGenderSelect(gender.id)}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="text-2xl">{gender.icon}</div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900">{gender.label}</h3>
+                    </div>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                        selectedPartnerGender === gender.id ? "border-purple-400 bg-purple-400" : "border-gray-300"
+                      }`}
+                    >
+                      {selectedPartnerGender === gender.id && (
+                        <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Step 16: Partner Birth Date Collection
+  if (currentStep === 16) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+        {/* Background SVG */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: "url('/svg-image-3.svg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-10 relative">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              {/* Back button */}
+              <Button variant="ghost" size="sm" onClick={handleBack} className="p-2 hover:bg-gray-100 rounded-full">
+                <ArrowLeft className="h-5 w-5 text-gray-600" />
+              </Button>
+
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                <span className="text-xl font-semibold text-gray-800">MOONGRADE</span>
+              </div>
+
+              {/* Progress indicator */}
+              <div className="text-sm text-gray-600 font-medium">
+                {currentStep}/{totalSteps}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="h-2" />
+            </div>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <main className="container mx-auto px-4 py-12 relative z-10">
+          <div className="max-w-2xl mx-auto">
+            {/* Question */}
+            <div className="text-center mb-12">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                What is your partner's date of birth?
+              </h1>
+              <p className="text-gray-600">
+                We need this to determine the planetary placements at the time of your partner's birth.
+              </p>
+            </div>
+
+            {/* Date selectors */}
+            <div className="space-y-6 mb-12">
+              {/* Month selector */}
+              <div>
+                <select
+                  value={partnerBirthMonth}
+                  onChange={(e) => setPartnerBirthMonth(e.target.value)}
+                  className="w-full p-4 text-lg border-2 border-gray-200 rounded-full focus:border-purple-400 focus:outline-none bg-white"
+                >
+                  <option value="">Month</option>
+                  {months.map((month) => (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Day selector */}
+              <div>
+                <select
+                  value={partnerBirthDay}
+                  onChange={(e) => setPartnerBirthDay(e.target.value)}
+                  className="w-full p-4 text-lg border-2 border-gray-200 rounded-full focus:border-purple-400 focus:outline-none bg-white"
+                >
+                  <option value="">Day</option>
+                  {days.map((day) => (
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Year selector */}
+              <div>
+                <select
+                  value={partnerBirthYear}
+                  onChange={(e) => setPartnerBirthYear(e.target.value)}
+                  className="w-full p-4 text-lg border-2 border-gray-200 rounded-full focus:border-purple-400 focus:outline-none bg-white"
+                >
+                  <option value="">Year</option>
+                  {years.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Continue button */}
+          <div className="text-center">
+            <Button
+              onClick={handlePartnerBirthDateContinue}
+              disabled={!partnerBirthMonth || !partnerBirthDay || !partnerBirthYear}
+              size="lg"
+              className="w-full max-w-md px-12 py-4 bg-slate-400 hover:bg-slate-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold text-lg rounded-full transition-all duration-200"
+            >
+              Continue
+            </Button>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Step 17: Partner Birth Time Collection
+  if (currentStep === 17) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+        {/* Background SVG */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: "url('/svg-image-11.svg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-10 relative">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              {/* Back button */}
+              <Button variant="ghost" size="sm" onClick={handleBack} className="p-2 hover:bg-gray-100 rounded-full">
+                <ArrowLeft className="h-5 w-5 text-gray-600" />
+              </Button>
+
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                <span className="text-xl font-semibold text-gray-800">MOONGRADE</span>
+              </div>
+
+              {/* Progress indicator */}
+              <div className="text-sm text-gray-600 font-medium">
+                {currentStep}/{totalSteps}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="h-2" />
+            </div>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <main className="container mx-auto px-4 py-12 relative z-10">
+          <div className="max-w-2xl mx-auto">
+            {/* Question */}
+            <div className="text-center mb-12">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                What is time of your partner's birth?
+              </h1>
+              <p className="text-gray-600">
+                We need this to determine the planetary placements at the time of your partner's birth. If you don't
+                know this information, you can still get plenty of useful insights.
+              </p>
+            </div>
+
+            {/* Time selectors */}
+            <div className="flex gap-4 justify-center mb-12">
+              {/* Hour selector */}
+              <div className="flex-1 max-w-[120px]">
+                <select
+                  value={partnerBirthHour}
+                  onChange={(e) => setPartnerBirthHour(e.target.value)}
+                  className="w-full p-4 text-lg border-2 border-gray-200 rounded-full focus:border-purple-400 focus:outline-none bg-white text-center"
+                >
+                  <option value="">12</option>
+                  {hours.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {hour}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Minute selector */}
+              <div className="flex-1 max-w-[120px]">
+                <select
+                  value={partnerBirthMinute}
+                  onChange={(e) => setPartnerBirthMinute(e.target.value)}
+                  className="w-full p-4 text-lg border-2 border-gray-200 rounded-full focus:border-purple-400 focus:outline-none bg-white text-center"
+                >
+                  <option value="">00</option>
+                  {minutes.map((minute) => (
+                    <option key={minute} value={minute}>
+                      {minute}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* AM/PM selector */}
+              <div className="flex-1 max-w-[120px]">
+                <select
+                  value={partnerBirthPeriod}
+                  onChange={(e) => setPartnerBirthPeriod(e.target.value)}
+                  className="w-full p-4 text-lg border-2 border-gray-200 rounded-full focus:border-purple-400 focus:outline-none bg-white text-center"
+                >
+                  <option value="">PM</option>
+                  {periods.map((period) => (
+                    <option key={period} value={period}>
+                      {period}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="space-y-4 text-center">
+            <Button
+              onClick={handlePartnerBirthTimeContinue}
+              disabled={!partnerBirthHour || !partnerBirthMinute || !partnerBirthPeriod}
+              size="lg"
+              className="w-full max-w-md px-12 py-4 bg-slate-800 hover:bg-slate-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold text-lg rounded-full transition-all duration-200"
+            >
+              Continue
+            </Button>
+
+            <Button
+              onClick={handlePartnerDontKnowTime}
+              variant="outline"
+              size="lg"
+              className="w-full max-w-md px-12 py-4 border-2 border-gray-300 hover:border-gray-400 text-slate-800 font-semibold text-lg rounded-full transition-all duration-200 bg-transparent"
+            >
+              I don't know
             </Button>
           </div>
         </main>

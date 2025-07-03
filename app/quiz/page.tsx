@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -24,9 +24,30 @@ export default function QuizPage() {
   const [birthPeriod, setBirthPeriod] = useState<string>("")
   // Add new state for birth location after the existing state declarations
   const [birthLocation, setBirthLocation] = useState<string>("")
+  const [progress, setProgress] = useState(0)
 
   const totalSteps = 28
   const router = useRouter()
+
+  useEffect(() => {
+    if (currentStep === 13) {
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(timer)
+            // Auto advance to next step after reaching 100%
+            setTimeout(() => {
+              setCurrentStep(14)
+            }, 2000)
+            return 100
+          }
+          return prev + 1
+        })
+      }, 50)
+
+      return () => clearInterval(timer)
+    }
+  }, [currentStep])
 
   const handleLevelSelect = (level: string) => {
     setSelectedLevel(level)
@@ -1321,6 +1342,194 @@ export default function QuizPage() {
                 Continue
               </Button>
             </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Add Step 13 condition right after Step 12 and before the fallback return statement:
+  // Step 13: Birth Chart Analysis Loading
+  if (currentStep === 13) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-slate-900 relative overflow-hidden">
+        {/* Header */}
+        <header className="sticky top-0 bg-slate-800/80 backdrop-blur-sm border-b border-slate-600 z-10 relative">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-center">
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                <span className="text-xl font-semibold text-white">MOONGRADE</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <main className="container mx-auto px-4 py-16 relative z-10">
+          <div className="max-w-2xl mx-auto text-center">
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-16">Analyzing your unique birth chart...</h1>
+
+            {/* Progress Circle */}
+            <div className="relative w-64 h-64 mx-auto mb-12">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                {/* Background circle */}
+                <circle cx="50" cy="50" r="45" stroke="rgba(148, 163, 184, 0.3)" strokeWidth="8" fill="none" />
+                {/* Progress circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  stroke="#FCD34D"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray={`${2 * Math.PI * 45}`}
+                  strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress / 100)}`}
+                  className="transition-all duration-300 ease-out"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-5xl font-bold text-yellow-400">{progress}%</span>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="mb-12">
+              <div className="text-2xl font-bold text-yellow-400 mb-2">2.9+ million people</div>
+              <div className="text-gray-300">have chosen Moongrade</div>
+            </div>
+
+            {/* Testimonial Card */}
+            <div className="bg-white rounded-lg p-6 text-left max-w-md mx-auto">
+              {/* Stars */}
+              <div className="flex gap-1 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="w-4 h-4 bg-green-500 rounded-sm"></div>
+                ))}
+              </div>
+
+              {/* Title */}
+              <h3 className="font-semibold text-gray-900 mb-2">Most accurate future predictions</h3>
+
+              {/* Review text */}
+              <p className="text-sm text-gray-700 leading-relaxed">
+                I got out of my toxic relationship last spring thanks to Moongrade. It said I'm gonna meet my soulmate
+                in 3 months, and we just got engaged last week! It's crazy how accurate their future predictions are.
+              </p>
+
+              {/* Reviewer */}
+              <div className="text-xs text-gray-500 mt-3">Emily, 26</div>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Add Step 14 condition right after Step 13 and before the fallback return statement:
+
+  // Step 14: Zodiac Sign Reveal
+  if (currentStep === 14) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-slate-900 relative overflow-hidden">
+        {/* Header */}
+        <header className="sticky top-0 bg-slate-800/80 backdrop-blur-sm border-b border-slate-600 z-10 relative">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              {/* Back button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="p-2 hover:bg-slate-700 rounded-full text-white"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                <span className="text-xl font-semibold text-white">MOONGRADE</span>
+              </div>
+
+              {/* Progress indicator */}
+              <div className="text-sm text-gray-300 font-medium">
+                {currentStep}/{totalSteps}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Main content */}
+        <main className="container mx-auto px-4 py-16 relative z-10 flex items-center justify-center min-h-[calc(100vh-120px)]">
+          <div className="max-w-md mx-auto text-center">
+            {/* Zodiac Card */}
+            <div className="bg-slate-700/50 backdrop-blur-sm rounded-3xl p-12 mb-8 border border-slate-600/50">
+              {/* Sagittarius Constellation */}
+              <div className="mb-8">
+                <svg
+                  width="200"
+                  height="200"
+                  viewBox="0 0 200 200"
+                  className="mx-auto text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  {/* Sagittarius constellation - simplified archer figure */}
+                  {/* Body */}
+                  <circle cx="100" cy="120" r="3" fill="currentColor" />
+                  <circle cx="85" cy="110" r="2" fill="currentColor" />
+                  <circle cx="115" cy="125" r="2" fill="currentColor" />
+                  <circle cx="95" cy="140" r="2" fill="currentColor" />
+                  <circle cx="105" cy="145" r="2" fill="currentColor" />
+
+                  {/* Bow and arrow */}
+                  <circle cx="60" cy="80" r="2" fill="currentColor" />
+                  <circle cx="140" cy="60" r="2" fill="currentColor" />
+                  <circle cx="160" cy="50" r="2" fill="currentColor" />
+
+                  {/* Connecting lines */}
+                  <line x1="100" y1="120" x2="85" y2="110" />
+                  <line x1="85" y1="110" x2="60" y2="80" />
+                  <line x1="100" y1="120" x2="115" y2="125" />
+                  <line x1="115" y1="125" x2="140" y2="60" />
+                  <line x1="140" y1="60" x2="160" y2="50" />
+                  <line x1="100" y1="120" x2="95" y2="140" />
+                  <line x1="100" y1="120" x2="105" y2="145" />
+
+                  {/* Bow curve */}
+                  <path d="M 50 85 Q 55 75 60 80" fill="none" />
+                  <path d="M 50 85 Q 55 95 60 80" fill="none" />
+
+                  {/* Arrow */}
+                  <line x1="65" y1="75" x2="155" y2="45" />
+                  <line x1="150" y1="42" x2="155" y2="45" />
+                  <line x1="155" y1="45" x2="152" y2="50" />
+                </svg>
+              </div>
+
+              {/* Sign Name */}
+              <h2 className="text-3xl font-bold text-white mb-6">Sagittarius</h2>
+
+              {/* Description */}
+              <p className="text-gray-300 leading-relaxed text-lg">
+                As a male Sagittarius, you are adventurous and optimistic, with a love for exploration and a natural
+                curiosity about the world.
+              </p>
+            </div>
+
+            {/* Continue button */}
+            <Button
+              onClick={handleContinue}
+              size="lg"
+              className="w-full max-w-sm px-12 py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold text-lg rounded-full transition-all duration-200 hover:scale-105"
+            >
+              Continue
+            </Button>
           </div>
         </main>
       </div>
